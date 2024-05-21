@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  openio:
+    build:
+      context: .
+    privileged: true
+    container_name: openio
+    restart: always
+    environment:
+      REGION: eu-central-1
+    ports:
+      - 6007:6007
+    volumes:
+      - ./oio:/oio
