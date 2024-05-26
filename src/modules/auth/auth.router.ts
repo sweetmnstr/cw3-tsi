@@ -2,8 +2,7 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import authService from './auth.service';
 import { TSignInDTO, TSignUpDTO } from './dtos';
 
-export default function authRouter(fastify: FastifyInstance, options: any, done: () => void) {
-  // Create a new student
+export default async function authRouter(fastify: FastifyInstance, options: any) {
   fastify.post('/sign-in', async (request, reply) => {
     try {
       const signInDTO = request.body as TSignInDTO;
@@ -16,8 +15,7 @@ export default function authRouter(fastify: FastifyInstance, options: any, done:
     }
   });
 
-  // Update a student
-  fastify.put('/sign-up', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.post('/sign-up', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const signUpDTO = request.body as TSignUpDTO;
       const token = await authService.signUp(signUpDTO);
@@ -28,6 +26,4 @@ export default function authRouter(fastify: FastifyInstance, options: any, done:
       reply.status(statusCode).send({ message });
     }
   });
-
-  done();
 }

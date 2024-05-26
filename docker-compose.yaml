@@ -1,0 +1,22 @@
+services: 
+  mobile_api:
+    image: cw-3
+    restart: unless-stopped
+    build:
+      context: .
+      target: development
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+      - JWT_ADMIN_SECRET_KEY=${JWT_ADMIN_SECRET_KEY}
+      - JWT_STUDENT_SECRET_KEY=${JWT_STUDENT_SECRET_KEY}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_TYPE=${DB_TYPE}
+      - DB_USER=${DB_USER}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+    volumes:
+      - ./:/usr/src/app/

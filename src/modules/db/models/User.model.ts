@@ -16,9 +16,6 @@ export class User extends Model {
   @Column({ allowNull: false, type: DataType.STRING })
   password: string;
 
-  @Column({ type: DataType.STRING })
-  photo?: string;
-
   @HasOne(() => Student)
   student: Student;
 

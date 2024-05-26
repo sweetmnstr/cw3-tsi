@@ -11,7 +11,8 @@ class UserRepository extends AbstractRepository<User> implements IUserRepository
   }
 
   public async findByEmail(email: string): Promise<User | null> {
-    return this.model.findOne({ where: { email } });
+    const user = await this.model.findOne({ where: { email } });
+    return user?.dataValues;
   }
 }
 

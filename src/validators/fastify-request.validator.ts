@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import Joi from 'joi';
-import { BadRequestError } from 'utils/errors';
+import { BadRequestError } from '../utils/errors';
 
 async function joiValidator(fastify: FastifyInstance) {
   fastify.decorate('validate', (schema: Joi.ObjectSchema<any>, data: unknown): void => {

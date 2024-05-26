@@ -17,7 +17,8 @@ declare namespace NodeJS {
     UPLOADS_MAX_FILES: string;
     UPLOADS_MAX_FILE_SIZE: string;
 
-    JWT_SECRET_KEY: string;
+    JWT_ADMIN_SECRET_KEY: string;
+    JWT_STUDENT_SECRET_KEY: string;
     JWT_EXPIRES_IN: string;
 
     DB_PASSWORD: string;

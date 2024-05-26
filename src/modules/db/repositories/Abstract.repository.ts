@@ -1,15 +1,15 @@
-// repositories/abstract.repository.ts
-// import { Model, ModelStatic } from 'sequelize/types';
-
-// repositories/abstract.repository.ts
-import { Model, ModelStatic, CreationAttributes, UpdateOptions, WhereOptions } from 'sequelize/types';
+// @ts-ignore
+import { Model, ModelStatic, CreationAttributes, UpdateOptions, WhereOptions, FindOptions, Attributes, DestroyOptions } from 'sequelize/types';
 
 export interface IRepository<T> {
   create(modelData: Partial<T>): Promise<T>;
-  findById(id: number): Promise<T | null>;
-  findAll(): Promise<T[]>;
+  // @ts-ignore
+  findById(id: number, options?: Omit<FindOptions<Attributes<T>>, 'where'>): Promise<T | null>;
+  // @ts-ignore
+  findAll(options?: FindOptions<Attributes<T>>): Promise<T[]>;
   update(id: number, modelData: Partial<T>): Promise<[affectedCount: number]>;
-  delete(id: number): Promise<number>;
+  // @ts-ignore
+  delete(id: number, options?: DestroyOptions<Attributes<T>>): Promise<number>;
 }
 
 export abstract class AbstractRepository<T extends Model> implements IRepository<T> {
@@ -24,12 +24,13 @@ export abstract class AbstractRepository<T extends Model> implements IRepository
     return this.model.create(data) as unknown as T;
   }
 
-  public async findAll(): Promise<T[]> {
-    return this.model.findAll();
+  public async findAll(options?: FindOptions<Attributes<T>>): Promise<T[]> {
+    return (await this.model.findAll(options)).map(model => model?.dataValues);
   }
 
-  public async findById(id: number): Promise<T | null> {
-    return this.model.findByPk(id);
+  public async findById(id: number, options: Omit<FindOptions<Attributes<T>>, 'where'>): Promise<T | null> {
+    const model = await this.model.findByPk(id, options);
+    return model?.dataValues;
   }
 
   public async update(id: number, data: Partial<T>): Promise<[affectedCount: number]> {
@@ -39,7 +40,7 @@ export abstract class AbstractRepository<T extends Model> implements IRepository
     return this.model.update(data, options);
   }
 
-  public async delete(id: number): Promise<number> {
+  public async delete(id: number, options?: DestroyOptions<Attributes<T>>): Promise<number> {
     return this.model.destroy({
       where: { id } as unknown as WhereOptions<T>
     });

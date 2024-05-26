@@ -1,11 +1,12 @@
 import Fastify from 'fastify';
 import authRouter from './modules/auth/auth.router';
 import studentRouter from './modules/student/student.router';
+import adminRouter from './modules/admin/admin.router';
 import fastifyJwt from '@fastify/jwt';
 import 'dotenv/config';
-import { sequelize, sequelizeAuthentificate } from 'modules/db';
+import { sequelize, sequelizeAuthentificate } from './modules/db';
 import { Secret } from '@fastify/jwt';
-import joiValidator from 'validators/fastify-request.validator';
+import joiValidator from './validators/fastify-request.validator';
 
 const apiPrefix = '/api/v1';
 const fastify = Fastify({
@@ -18,7 +19,9 @@ async function main() {
 
   fastify.register(joiValidator);
   fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET ?? ('secret' as Secret) });
+
   fastify.register(authRouter, { prefix: `${apiPrefix}/auth` });
+  fastify.register(adminRouter, { prefix: `${apiPrefix}/admins` });
   fastify.register(studentRouter, { prefix: `${apiPrefix}/students` });
 
   fastify.listen({ port }, (err, address) => {

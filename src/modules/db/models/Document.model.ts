@@ -9,9 +9,6 @@ export class Document extends Model {
   @Column({ allowNull: false, type: DataType.STRING })
   faculty: string;
 
-  @Column({ allowNull: true, type: DataType.STRING })
-  photo?: string;
-
   @Column({ allowNull: false, type: DataType.STRING })
   firstName: string;
 
