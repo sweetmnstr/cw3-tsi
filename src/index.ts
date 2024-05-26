@@ -21,7 +21,7 @@ async function main() {
   fastify.register(fastifyJwt, { secret: process.env.JWT_SECRET ?? ('secret' as Secret) });
 
   fastify.register(authRouter, { prefix: `${apiPrefix}/auth` });
-  fastify.register(adminRouter, { prefix: `${apiPrefix}/admins` });
+  fastify.register(adminRouter, { prefix: `${apiPrefix}/admin` });
   fastify.register(studentRouter, { prefix: `${apiPrefix}/students` });
 
   fastify.listen({ port }, (err, address) => {

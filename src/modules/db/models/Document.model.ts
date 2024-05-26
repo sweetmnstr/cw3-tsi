@@ -9,12 +9,6 @@ export class Document extends Model {
   @Column({ allowNull: false, type: DataType.STRING })
   faculty: string;
 
-  @Column({ allowNull: false, type: DataType.STRING })
-  firstName: string;
-
-  @Column({ allowNull: false, type: DataType.STRING })
-  lastName: string;
-
   @Column({ allowNull: false, type: DataType.ENUM(...Object.values(GenderEnum).map(String)) })
   gender: GenderEnum;
 

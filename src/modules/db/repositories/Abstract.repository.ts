@@ -1,8 +1,19 @@
 // @ts-ignore
-import { Model, ModelStatic, CreationAttributes, UpdateOptions, WhereOptions, FindOptions, Attributes, DestroyOptions } from 'sequelize/types';
+import {
+  Model,
+  ModelStatic,
+  CreationAttributes,
+  UpdateOptions,
+  WhereOptions,
+  FindOptions,
+  Attributes,
+  DestroyOptions,
+  CreateOptions
+} from 'sequelize/types';
 
 export interface IRepository<T> {
-  create(modelData: Partial<T>): Promise<T>;
+  //@ts-ignore
+  create(modelData: Partial<T>, options?: CreateOptions<Attributes<T>>): Promise<T>;
   // @ts-ignore
   findById(id: number, options?: Omit<FindOptions<Attributes<T>>, 'where'>): Promise<T | null>;
   // @ts-ignore
@@ -19,9 +30,9 @@ export abstract class AbstractRepository<T extends Model> implements IRepository
     this.model = model;
   }
 
-  public async create(data: Partial<T>): Promise<T> {
+  public async create(data: Partial<T>, options?: CreateOptions<Attributes<T>>): Promise<T> {
     // @ts-ignore
-    return this.model.create(data) as unknown as T;
+    return this.model.create(data, options) as unknown as T;
   }
 
   public async findAll(options?: FindOptions<Attributes<T>>): Promise<T[]> {

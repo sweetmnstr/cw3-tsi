@@ -1,0 +1,3 @@
+import { sequelizeAuthentificate } from '.';
+
+sequelizeAuthentificate();

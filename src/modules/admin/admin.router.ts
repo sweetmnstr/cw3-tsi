@@ -3,6 +3,8 @@ import adminService from './admin.service';
 import JWTService from '../../utils/JWT.service';
 import { DocumentStatusEnum } from '../db/enums/DocumentStatus.enum';
 import { TSignUpDTO } from '../auth/dtos';
+import { ForbiddenError } from 'utils/errors';
+import { RoleEnum } from 'modules/db/enums/Role.enum';
 
 // Define your Fastify router
 export default async function studentRouter(fastify: FastifyInstance, options: any) {
@@ -12,11 +14,15 @@ export default async function studentRouter(fastify: FastifyInstance, options: a
     try {
       const authHeader = request.headers['authorization'];
       if (!authHeader) {
-        throw new Error('No token provided');
+        throw new ForbiddenError('No token provided');
       }
       const token = authHeader.split(' ')[1];
 
       const { role } = JWTService.decodeToken(token);
+      // if (role !== RoleEnum.ADMIN) {
+      //   throw new ForbiddenError('You are not authorized to access this resource');
+      // }
+
       JWTService.verifyToken(token, role);
     } catch (err) {
       reply.send(err);

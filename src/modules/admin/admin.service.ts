@@ -10,7 +10,7 @@ import { TSignUpDTO } from '../auth/dtos';
 
 export interface IAdminService {
   changeDocumentStatus(documentId: number, status: DocumentStatusEnum.APPROVED | DocumentStatusEnum.REJECTED): Promise<string>;
-  createStudent(createUserDTO: TSignUpDTO): Promise<TStudentResponse>;
+  createStudent(createUserDTO: TSignUpDTO): Promise<string>;
   getStudents(): Promise<TStudentResponse[]>;
   getStudentById(id: number): Promise<TStudentResponse | null>;
   deleteStudent(id: number): Promise<number>;
@@ -23,7 +23,7 @@ class AdminService implements IAdminService {
     private readonly usersRepository: IUserRepository = UserRepository
   ) {}
   // Create a new student
-  public async createStudent(createUserDTO: TSignUpDTO): Promise<TStudentResponse> {
+  public async createStudent(createUserDTO: TSignUpDTO): Promise<string> {
     const userId = await this.createUser(createUserDTO);
     return this.studentService.createStudent(userId);
   }

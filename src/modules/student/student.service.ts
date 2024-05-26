@@ -4,9 +4,10 @@ import DocumentRepository from '../db/repositories/Document.repository';
 import StudentRepository from '../db/repositories/Student.repository';
 import UserRepository, { IUserRepository } from '../db/repositories/User.repository';
 import { NotFoundError } from '../../utils/errors';
+import { DocumentStatusEnum } from 'modules/db/enums/DocumentStatus.enum';
 
 export interface IStudentService {
-  createStudent(userId: number): Promise<TStudentResponse>;
+  createStudent(userId: number): Promise<string>;
   getStudents(): Promise<TStudentResponse[]>;
   getStudentById(id: number): Promise<TStudentResponse | null>;
   updateStudent(studentId: number, student: Partial<Student>): Promise<[number]>;
@@ -29,9 +30,9 @@ class StudentService implements IStudentService {
   ) {}
 
   // Create a new student
-  public async createStudent(userId: number): Promise<TStudentResponse> {
-    const newStudent = await this.studentsRepository.create({ userId });
-    return this.mapGetStudent(newStudent);
+  public async createStudent(userId: number): Promise<string> {
+    await this.studentsRepository.create({ userId }, { include: [{ model: User }] });
+    return 'User created successfully!';
   }
 
   // Get all students
@@ -73,7 +74,9 @@ class StudentService implements IStudentService {
     if (!student) {
       throw new NotFoundError('Student not found');
     }
-    return this.userRepository.delete(student.dataValues.userId, { cascade: true });
+    const userId = student.userId;
+    await this.studentsRepository.delete(id, { cascade: true });
+    return this.userRepository.delete(userId, { cascade: true });
   }
 
   public async createStudentApplication(studentId: number, document: Partial<Document>) {
@@ -81,7 +84,7 @@ class StudentService implements IStudentService {
     if (!student) {
       throw new NotFoundError('Student not found');
     }
-    return this.documentRepository.create({ ...document, studentId });
+    return this.documentRepository.create({ ...document, studentId, status: DocumentStatusEnum.PENDING });
   }
 }
 
